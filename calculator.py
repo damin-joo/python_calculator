@@ -12,65 +12,58 @@ root.configure(background='black', padx=10, pady=10)
 
 #FUNCTION
 def update(numpad):
+    entry.config(state="normal")
     if entry.get() == "0":
         entry.delete(0, END)
     entry.insert(END, numpad)
+    entry.config(state="readonly")
+
 
 def calculate():
+    entry.config(state="normal")
     try:
         result = eval(entry.get())
         entry.delete(0, END)
         entry.insert(END, result)
     except Exception as err:
         msgbox.showerror("Error", err)
+    entry.config(state="readonly")
 
 def clear():
+    entry.config(state="normal")
     entry.delete(0, END)
+    entry.config(state="readonly")
 
 def percentage():
+    entry.config(state="normal")
     to_int = eval(entry.get())
     entry.delete(0, END)
     entry.insert(END, to_int/100)
+    entry.config(state="readonly")
 
 def negative():
+    entry.config(state="normal")
     if entry.get().startswith("-"):
         entry.delete(0, 1)
     else:
         entry.insert(0, "-")
+    entry.config(state="readonly")
 
 #COMBOBOX
 ##read only enable
 opt_read = ["writable", "read-only"]
 read_opt = ttk.Combobox(root, state="readonly", values=opt_read, width=10)
 read_opt.current(0)
-read_opt.grid(row=0, column=2, padx=3, pady=5)
-
-##scientific calculator
-opt_sci = ["basic", "scientific"]
-sci_opt = ttk.Combobox(root, state="readonly", values=opt_sci, width=10)
-sci_opt.current(0)
-sci_opt.grid(row=0, column=3, padx=3, pady=5)
+read_opt.grid(row=0, column=3, padx=3, pady=5)
 
 def txt_mode(event):
-    print(read_opt.get())
     selected_item = read_opt.get()
-    print(selected_item)
     if (selected_item == "writable"):
         entry.config(state="normal")
     else:
         entry.config(state="readonly")
 
-def sci_mode(event):
-    print(sci_opt.get())
-    selected_item = sci_opt.get()
-    print(selected_item)
-    if (selected_item == "basic"):
-        print("basic mode turned on")
-    else:
-        print("scientific mode turned on")
-
 read_opt.bind("<<ComboboxSelected>>", txt_mode)
-sci_opt.bind("<<ComboboxSelected>>", sci_mode)
 
 #TEXT
 entry = Entry(root, font = "Helvetica 20 bold", justify="right")
