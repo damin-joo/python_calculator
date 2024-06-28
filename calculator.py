@@ -8,12 +8,7 @@ root = Tk()
 #INITIAL SETTINGS
 root.title("Calculator Application")
 root.resizable(False, False)       # resize (x, y)
-root.configure(background='black')
-
-#TEXT
-entry = Entry(root, font = "Helvetica 20 bold", justify="right")
-entry.grid(row=0, sticky=N+E+S+W, columnspan=4, padx=3, pady=3, ipady=8)
-entry.insert(0, "0")
+root.configure(background='black', padx=10, pady=10)
 
 #FUNCTION
 def update(numpad):
@@ -43,6 +38,45 @@ def negative():
     else:
         entry.insert(0, "-")
 
+#COMBOBOX
+##read only enable
+opt_read = ["writable", "read-only"]
+read_opt = ttk.Combobox(root, state="readonly", values=opt_read, width=10)
+read_opt.current(0)
+read_opt.grid(row=0, column=2, padx=3, pady=5)
+
+##scientific calculator
+opt_sci = ["basic", "scientific"]
+sci_opt = ttk.Combobox(root, state="readonly", values=opt_sci, width=10)
+sci_opt.current(0)
+sci_opt.grid(row=0, column=3, padx=3, pady=5)
+
+def txt_mode(event):
+    print(read_opt.get())
+    selected_item = read_opt.get()
+    print(selected_item)
+    if (selected_item == "writable"):
+        entry.config(state="normal")
+    else:
+        entry.config(state="readonly")
+
+def sci_mode(event):
+    print(sci_opt.get())
+    selected_item = sci_opt.get()
+    print(selected_item)
+    if (selected_item == "basic"):
+        print("basic mode turned on")
+    else:
+        print("scientific mode turned on")
+
+read_opt.bind("<<ComboboxSelected>>", txt_mode)
+sci_opt.bind("<<ComboboxSelected>>", sci_mode)
+
+#TEXT
+entry = Entry(root, font = "Helvetica 20 bold", justify="right")
+entry.grid(row=1, sticky=N+E+S+W, columnspan=4, padx=3, pady=3, ipady=8)
+entry.insert(0, "0")
+
 #BUTTON
 button_name = [
     ["btn_clr", "btn_neg", "btn_perc", "btn_div"], 
@@ -66,28 +100,22 @@ for i in range(0, 5):
         name = button_name[i][j]
 
         if text == "=":
-            name = Button(root, text=text, width=5, height=2, command=calculate)
+            name = Button(root, text=text, width=10, height=2, command=calculate)
         elif text == "AC":
-            name = Button(root, text=text, width=5, height=2, command=clear)
+            name = Button(root, text=text, width=10, height=2, command=clear)
         elif text == "+/-":
-            name = Button(root, text=text, width=5, height=2, command=negative)
+            name = Button(root, text=text, width=10, height=2, command=negative)
         elif text == "%":
-            name = Button(root, text=text, width=5, height=2, command=percentage)
+            name = Button(root, text=text, width=10, height=2, command=percentage)
         else:
-            name = Button(root, text=text, width=5, height=2, command=lambda t=text: update(t))
+            name = Button(root, text=text, width=10, height=2, command=lambda t=text: update(t))
 
         if text == "0":
-            name.grid(row=i+1, column=j, columnspan=2, sticky=N+E+S+W, padx=3, pady=3)
+            name.grid(row=i+2, column=j, columnspan=2, sticky=N+E+S+W, padx=3, pady=3)
         elif(text == "." or text == "="):
-            name.grid(row=i+1, column=j+1, sticky=N+E+S+W, padx=3, pady=3)
+            name.grid(row=i+2, column=j+1, sticky=N+E+S+W, padx=3, pady=3)
         else:
-            name.grid(row=i+1, column=j, sticky=N+E+S+W, padx=3, pady=3)
-
-#LISTBOX
-##change disable
-
-
-##scientific calculator
+            name.grid(row=i+2, column=j, sticky=N+E+S+W, padx=3, pady=3)
 
 
 root.mainloop()
